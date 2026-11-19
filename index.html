@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduCore LMS - Coaching & Live Class Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; }
+    :root { --primary: #2563eb; --primary-light: #eff6ff; --primary-dark: #1d4ed8; }
+    .bg-theme { background-color: var(--primary); }
+    .bg-theme-dark { background-color: var(--primary-dark); }
+    .bg-theme-light { background-color: var(--primary-light); }
+    .text-theme { color: var(--primary); }
+    .border-theme { border-color: var(--primary); }
+  </style>
+</head>
+<body class="text-slate-800 select-none">
+
+  <!-- ================= AUTHENTICATION SCREEN (3 PANELS) ================= -->
+  <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4 bg-slate-900">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl">
+      
+      <!-- Brand Header -->
+      <div class="text-center mb-6">
+        <img id="auth-logo" src="https://cdn-icons-png.flaticon.com/512/3413/3413535.png" class="w-14 h-14 mx-auto rounded-2xl shadow-md mb-2 object-cover">
+        <h1 class="text-xl font-extrabold text-slate-900" id="auth-app-name">Sankalp Academy</h1>
+        <p class="text-xs text-slate-500">Select your login portal to continue</p>
+      </div>
+
+      <!-- 3 Role Tabs -->
+      <div class="grid grid-cols-3 gap-1.5 bg-slate-100 p-1.5 rounded-2xl mb-6 text-xs font-bold">
+        <button onclick="switchAuthRole('student')" id="role-tab-student" class="py-2.5 rounded-xl bg-theme text-white shadow transition">Student</button>
+        <button onclick="switchAuthRole('admin')" id="role-tab-admin" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Admin</button>
+        <button onclick="switchAuthRole('founder')" id="role-tab-founder" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">Main Admin</button>
+      </div>
+
+      <!-- 1. STUDENT PANEL (Login + Signup with OTP) -->
+      <div id="panel-student">
+        <div class="flex justify-center gap-4 mb-4 text-xs font-bold border-b border-slate-100 pb-2">
+          <button onclick="toggleStudentForm('login')" id="stu-mode-login" class="text-theme border-b-2 border-theme pb-1">Student Login</button>
+          <button onclick="toggleStudentForm('signup')" id="stu-mode-signup" class="text-slate-400 pb-1">New Registration</button>
+        </div>
+
+        <!-- Student Login -->
+        <div id="student-login-box" class="space-y-3">
+          <div>
+            <label class="text-[11px] font-bold text-slate-600">Username *</label>
+            <input type="text" id="stu-login-user" placeholder="Enter your username" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs">
+          </div>
+          <div>
+            <label class="text-[11px] font-bold text-slate-600">Password *</label>
+            <input type="password" id="stu-login-pass" placeholder="Enter your password" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs">
+          </div>
+          <button onclick="loginStudent()" class="w-full py-3 rounded-xl bg-theme text-white text-xs font-extrabold shadow-lg mt-2">Login as Student</button>
+        </div>
+
+        <!-- Student Signup -->
+        <div id="student-signup-box" class="hidden space-y-2.5">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] font-bold text-slate-600">Full Name *</label>
+              <input type="text" id="reg-name" placeholder="Rahul Kumar" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-slate-600">Gender *</label>
+              <select id="reg-gender" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] font-bold text-slate-600">Email (Optional)</label>
+              <input type="email" id="reg-email" placeholder="rahul@mail.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-slate-600">Phone (Optional)</label>
+              <input type="tel" id="reg-phone" placeholder="9876543210" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] font-bold text-slate-600">Create Username *</label>
+              <input type="text" id="reg-user" placeholder="rahul2026" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-slate-600">Create Password *</label>
+              <input type="password" id="reg-pass" placeholder="••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            </div>
+          </div>
+
+          <!-- OTP Verification Box -->
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center gap-2">
+            <input type="text" id="reg-otp-input" placeholder="Enter 4-digit OTP" class="flex-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs">
+            <button onclick="sendMockOTP()" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-[11px] font-bold shrink-0">Get OTP</button>
+          </div>
+
+          <button onclick="registerStudent()" class="w-full py-3 rounded-xl bg-emerald-600 text-white text-xs font-extrabold shadow">Verify OTP & Register</button>
+        </div>
+      </div>
+
+      <!-- 2. ADMIN (TEACHER) PANEL -->
+      <div id="panel-admin" class="hidden space-y-3">
+        <div>
+          <label class="text-[11px] font-bold text-slate-600">Admin Username *</label>
+          <input type="text" id="adm-user" placeholder="Enter Admin Username" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs">
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-slate-600">Admin Password *</label>
+          <input type="password" id="adm-pass" placeholder="••••••••" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs">
+        </div>
+        <button onclick="loginAdmin()" class="w-full py-3 rounded-xl bg-slate-900 text-white text-xs font-extrabold shadow-lg">Login to Admin Panel</button>
+      </div>
+
+      <!-- 3. MAIN ADMIN (FOUNDER / CO-FOUNDER) PANEL -->
+      <div id="panel-founder" class="hidden space-y-3">
+        <div>
+          <label class="text-[11px] font-bold text-slate-600">Main Admin Username *</label>
+          <input type="text" id="fnd-user" placeholder="Enter Founder / Co-Founder ID" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs">
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-slate-600">Master Password *</label>
+          <input type="password" id="fnd-pass" placeholder="••••••••" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs">
+        </div>
+        <button onclick="loginFounder()" class="w-full py-3 rounded-xl bg-purple-700 text-white text-xs font-extrabold shadow-lg">Access Founder Control</button>
+      </div>
+
+    </div>
+  </div>
+<!-- ================= MAIN APPLICATION SHELL ================= -->
+  <div id="main-app" class="hidden min-h-screen pb-24">
+    
+    <!-- Top Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 px-4 py-3 shadow-sm">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img id="header-logo" src="https://cdn-icons-png.flaticon.com/512/3413/3413535.png" class="w-9 h-9 rounded-xl object-cover shadow-sm">
+          <div>
+            <h1 class="text-sm md:text-base font-extrabold text-slate-900 leading-tight" id="header-app-name">Sankalp Academy</h1>
+            <p class="text-[10px] font-bold text-theme uppercase tracking-wider" id="header-role-badge">Student Portal</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="hidden sm:inline text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl" id="header-user-greeting">Hi, User</span>
+          <button onclick="logoutApp()" class="text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-xl hover:bg-rose-100 transition">
+            <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Incoming Call Popup for Student (When Admin Calls in Live Class) -->
+    <div id="incoming-call-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+      <div class="bg-slate-900 border-2 border-emerald-500 rounded-3xl p-6 max-w-sm w-full text-center text-white shadow-2xl">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mx-auto mb-3 animate-bounce">
+          <i class="fa-solid fa-video"></i>
+        </div>
+        <h3 class="text-lg font-extrabold">Teacher Calling You Live!</h3>
+        <p class="text-xs text-slate-300 mt-1">Admin ne aapko Live Class mein doubt poochne ke liye invite kiya hai.</p>
+        <div class="mt-6 flex gap-3">
+          <button onclick="declineLiveCall()" class="flex-1 py-3 rounded-xl bg-rose-600 text-white text-xs font-extrabold">Decline</button>
+          <button onclick="acceptLiveCall()" class="flex-1 py-3 rounded-xl bg-emerald-500 text-slate-950 text-xs font-extrabold shadow-lg">Pick Call</button>
+        </div>
+      </div>
+    </div>
+
+    <main class="max-w-5xl mx-auto px-4 pt-5">
+
+      <!-- TAB 1: LIVE CLASS & INTERACTIVE CALL ROOM -->
+      <section id="view-live" class="tab-view space-y-5">
+        <!-- Active Live Stream Stage -->
+        <div class="bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-xl text-white">
+          <div class="px-4 py-3 bg-slate-900 flex items-center justify-between border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-rose-400">LIVE NOW</span>
+              <span class="text-xs font-bold text-slate-300 truncate max-w-[180px] sm:max-w-xs" id="live-class-title">Physics: Electrostats & Gauss Law</span>
+            </div>
+            <span class="text-[11px] bg-white/10 px-2.5 py-0.5 rounded-full font-bold"><i class="fa-solid fa-eye mr-1"></i> 248 Watching</span>
+          </div>
+
+          <!-- Video Stage + Student Camera/Mic Dock -->
+          <div class="relative aspect-video bg-black flex flex-col items-center justify-center">
+            <iframe id="live-stream-frame" class="w-full h-full" src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=0" frameborder="0" allowfullscreen></iframe>
+            
+            <!-- Student Active Video/Mic Overlay (Appears when Student picks Admin's Call) -->
+            <div id="student-av-dock" class="hidden absolute bottom-3 right-3 bg-slate-900/95 border-2 border-emerald-500 rounded-2xl p-3 w-48 shadow-2xl">
+              <div class="relative h-24 bg-slate-800 rounded-xl overflow-hidden flex items-center justify-center mb-2">
+                <video id="local-webcam" autoplay muted playsinline class="w-full h-full object-cover hidden"></video>
+                <div id="cam-off-placeholder" class="text-center">
+                  <i class="fa-solid fa-user-graduate text-2xl text-emerald-400"></i>
+                  <span class="text-[10px] block text-slate-300 mt-1">You (On Stage)</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-center gap-2">
+                <button onclick="toggleStudentMic()" id="btn-stu-mic" class="w-8 h-8 rounded-full bg-emerald-500 text-slate-950 text-xs font-bold"><i class="fa-solid fa-microphone"></i></button>
+                <button onclick="toggleStudentCam()" id="btn-stu-cam" class="w-8 h-8 rounded-full bg-slate-700 text-white text-xs font-bold"><i class="fa-solid fa-video-slash"></i></button>
+                <button onclick="endStudentCall()" class="w-8 h-8 rounded-full bg-rose-600 text-white text-xs font-bold"><i class="fa-solid fa-phone-slash"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Live Call Controls (Visible only to Admin & Main Admin inside Live Class) -->
+          <div id="admin-live-call-bar" class="hidden p-4 bg-slate-900 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+            <div class="text-xs">
+              <span class="font-extrabold text-emerald-400"><i class="fa-solid fa-headset mr-1"></i> Live Student Call Desk:</span>
+              <span class="text-slate-400 ml-1">Invite student to speak with Camera & Mic</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <select id="live-call-student-select" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-3 py-2"></select>
+              <button onclick="triggerStudentCall()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold px-4 py-2 rounded-xl shadow">
+                <i class="fa-solid fa-phone-volume mr-1"></i> Call Student
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Live Classes Schedule -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <h3 class="text-sm font-extrabold text-slate-900 mb-3"><i class="fa-regular fa-calendar-check text-theme mr-1.5"></i> Upcoming Live Classes</h3>
+          <div id="upcoming-classes-list" class="space-y-2.5"></div>
+        </div>
+      </section>
+
+      <!-- TAB 2: BATCHES & RECORDED VIDEOS -->
+      <section id="view-batches" class="tab-view hidden space-y-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-extrabold text-slate-900">Batches & Video Lectures</h2>
+            <p class="text-xs text-slate-500">Enrolled courses & uploaded class recordings</p>
+          </div>
+        </div>
+        <div id="batches-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <h3 class="text-sm font-extrabold text-slate-900 mb-3">Recorded Video Lectures</h3>
+          <div id="videos-list" class="space-y-2.5"></div>
+        </div>
+      </section>
+
+      <!-- TAB 3: CBT MOCK TEST (CUSTOM PER-QUESTION TIMER) -->
+      <section id="view-tests" class="tab-view hidden space-y-4">
+        <div id="cbt-lobby" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase bg-theme-light text-theme px-2.5 py-0.5 rounded-full">Per-Question Timed CBT</span>
+            <h3 class="text-base font-extrabold text-slate-900 mt-1.5">All India Live Mock Test Series</h3>
+            <p class="text-xs text-slate-500 mt-1" id="cbt-meta-info">Questions: 3 • Time per Question: 30s • +4 / -1 Marking</p>
+          </div>
+          <button onclick="startCustomTest()" class="bg-theme text-white text-xs font-extrabold px-6 py-3 rounded-xl shadow">Start Test Now</button>
+        </div>
+
+        <div id="cbt-exam-box" class="hidden bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
+          <div class="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">
+            <span class="text-xs font-bold" id="cbt-q-progress">Question 1 / 3</span>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] text-slate-400 uppercase">Question Timer:</span>
+              <span class="text-sm font-mono font-black bg-rose-600 text-white px-3 py-0.5 rounded-lg" id="cbt-q-timer">30s</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <p class="text-sm font-extrabold text-slate-900 mb-4" id="cbt-q-text">Question text</p>
+            <div id="cbt-options-box" class="space-y-2.5"></div>
+          </div>
+          <div class="bg-slate-50 px-5 py-3 border-t border-slate-200 flex justify-between">
+            <span class="text-[11px] text-slate-500 font-semibold self-center">Auto-skips when question timer ends</span>
+            <button onclick="nextCBTQuestion()" class="bg-theme text-white text-xs font-extrabold px-5 py-2.5 rounded-xl">Save & Next</button>
+          </div>
+        </div>
+
+        <div id="cbt-result-box" class="hidden bg-white p-6 rounded-2xl border border-slate-200 text-center shadow-lg">
+          <h3 class="text-lg font-extrabold text-slate-900">CBT Test Completed!</h3>
+          <div class="text-3xl font-black text-theme my-3" id="cbt-final-score">0 / 12</div>
+          <p class="text-xs text-slate-500 mb-4" id="cbt-final-stats">Correct: 0 | Wrong: 0</p>
+          <button onclick="resetCBT()" class="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl">Back to Tests</button>
+        </div>
+      </section>
+<!-- TAB 4: ADMIN PANEL (TEACHER CONTROLS) -->
+      <section id="view-admin" class="tab-view hidden space-y-5">
+        <div class="bg-slate-900 text-white p-5 rounded-2xl flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-extrabold"><i class="fa-solid fa-user-shield text-amber-400 mr-1.5"></i> Teacher & Admin Control Panel</h2>
+            <p class="text-xs text-slate-400">Upload Videos, Manage Test Timer/Questions & Student Subscriptions</p>
+          </div>
+          <span class="text-xs font-extrabold bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full" id="admin-total-students">0 Students</span>
+        </div>
+
+        <!-- 1. Upload Video & Schedule Live Class -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-video text-theme mr-1"></i> Upload Recorded Video</h3>
+            <input type="text" id="adm-vid-title" placeholder="Video Title (e.g. Optics Lec 01)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="adm-vid-url" placeholder="YouTube URL or Video ID" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <button onclick="adminUploadVideo()" class="w-full py-2.5 rounded-xl bg-theme text-white text-xs font-extrabold">Publish Video</button>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-tower-broadcast text-rose-600 mr-1"></i> Set Live / Upcoming Class</h3>
+            <input type="text" id="adm-live-title" placeholder="Live Class Topic" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <div class="flex gap-2">
+              <select id="adm-live-status" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
+                <option value="LIVE">Set as LIVE NOW</option>
+                <option value="UPCOMING">Add to Upcoming</option>
+              </select>
+              <input type="text" id="adm-live-time" placeholder="Time (e.g. 7:00 PM)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            </div>
+            <button onclick="adminManageLive()" class="w-full py-2.5 rounded-xl bg-rose-600 text-white text-xs font-extrabold">Update Live Schedule</button>
+          </div>
+        </div>
+
+        <!-- 2. Custom Test Question & Per-Question Timer -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
+            <h3 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-stopwatch text-emerald-600 mr-1"></i> Test Builder & Question Timer</h3>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-600">Seconds / Question:</span>
+              <input type="number" id="adm-q-seconds" value="30" min="5" max="300" class="w-16 bg-slate-100 border border-slate-300 rounded-lg px-2 py-1 text-xs font-extrabold text-center">
+              <button onclick="saveQuestionTimer()" class="bg-slate-900 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg">Set Time</button>
+            </div>
+          </div>
+          <input type="text" id="adm-q-text" placeholder="Enter New Question..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <input type="text" id="adm-opt-0" placeholder="Option A" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="adm-opt-1" placeholder="Option B" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="adm-opt-2" placeholder="Option C" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="adm-opt-3" placeholder="Option D" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+          </div>
+          <div class="flex items-center justify-between">
+            <select id="adm-q-ans" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
+              <option value="0">Correct: Option A</option>
+              <option value="1">Correct: Option B</option>
+              <option value="2">Correct: Option C</option>
+              <option value="3">Correct: Option D</option>
+            </select>
+            <button onclick="adminAddQuestion()" class="bg-emerald-600 text-white text-xs font-extrabold px-5 py-2.5 rounded-xl">Add Question to Test</button>
+          </div>
+        </div>
+
+        <!-- 3. Student Directory & Subscription Management -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="text-sm font-extrabold text-slate-900 mb-3"><i class="fa-solid fa-users-gear text-theme mr-1"></i> Registered Students & Subscription Control</h3>
+          <div id="admin-students-list" class="space-y-2.5"></div>
+        </div>
+      </section>
+
+      <!-- TAB 5: MAIN ADMIN PANEL (FOUNDER / CO-FOUNDER SUPREME CONTROL) -->
+      <section id="view-founder" class="tab-view hidden space-y-5">
+        <div class="bg-gradient-to-r from-purple-800 to-indigo-900 text-white p-5 rounded-2xl shadow-lg">
+          <h2 class="text-base font-extrabold"><i class="fa-solid fa-crown text-amber-400 mr-1.5"></i> Main Admin (Founder / Co-Founder) Master Control</h2>
+          <p class="text-xs text-purple-200 mt-0.5">Full Authority: App Branding, Logo, Themes, Batch Launches & Staff Management</p>
+        </div>
+
+        <!-- 1. App Name, Logo & Theme Customization -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <h3 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-paintbrush text-purple-600 mr-1"></i> App Branding, Logo & Theme</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-[11px] font-bold text-slate-500">App / Institute Name</label>
+              <input type="text" id="fnd-app-name" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-500">Logo Image URL</label>
+              <input type="text" id="fnd-app-logo" class="w-full mt-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-600">Select Theme:</span>
+              <button onclick="applyTheme('#2563eb','#eff6ff','#1d4ed8')" class="w-6 h-6 rounded-full bg-blue-600 border-2 border-white shadow"></button>
+              <button onclick="applyTheme('#059669','#ecfdf5','#047857')" class="w-6 h-6 rounded-full bg-emerald-600 border-2 border-white shadow"></button>
+              <button onclick="applyTheme('#7c3aed','#f5f3ff','#6d28d9')" class="w-6 h-6 rounded-full bg-violet-600 border-2 border-white shadow"></button>
+              <button onclick="applyTheme('#e11d48','#fff1f2','#be123c')" class="w-6 h-6 rounded-full bg-rose-600 border-2 border-white shadow"></button>
+            </div>
+            <button onclick="founderSaveBranding()" class="bg-purple-700 text-white text-xs font-extrabold px-5 py-2.5 rounded-xl">Apply App Changes</button>
+          </div>
+        </div>
+
+        <!-- 2. Launch New Batch -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <h3 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-rocket text-theme mr-1"></i> Launch New Batch</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <input type="text" id="fnd-batch-name" placeholder="Batch Name (e.g. Arjuna 2027)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="fnd-batch-price" placeholder="Fee (e.g. ₹1999 or FREE)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="fnd-batch-desc" placeholder="Subjects / Validity" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+          </div>
+          <button onclick="founderLaunchBatch()" class="bg-slate-900 text-white text-xs font-extrabold px-5 py-2.5 rounded-xl">Launch Batch Live</button>
+        </div>
+
+        <!-- 3. Add / Remove Main Admins (Founder / Co-Founder) -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <h3 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-crown text-purple-600 mr-1"></i> Manage Main Admins (Founder / Co-Founder)</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input type="text" id="fnd-new-fnd-name" placeholder="Role Title (e.g. Co-Founder)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="fnd-new-fnd-user" placeholder="Unique Username" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="fnd-new-fnd-pass" placeholder="Password" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+          </div>
+          <button onclick="founderAddMainAdmin()" class="bg-purple-700 text-white text-xs font-extrabold px-4 py-2 rounded-xl">Add Co-Founder / Main Admin</button>
+          <div id="founder-main-admins-list" class="space-y-2 pt-2"></div>
+        </div>
+
+        <!-- 4. Add / Remove Admins (Teachers) -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <h3 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-user-tie text-amber-600 mr-1"></i> Manage Admins (Add / Remove Staff)</h3>
+          <div class="flex gap-2">
+            <input type="text" id="fnd-new-adm-user" placeholder="Unique Admin Username" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <input type="text" id="fnd-new-adm-pass" placeholder="Password" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+            <button onclick="founderAddAdmin()" class="bg-emerald-600 text-white text-xs font-extrabold px-4 py-2 rounded-xl">Add Admin</button>
+          </div>
+          <div id="founder-admins-list" class="space-y-2 pt-2"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 z-40 shadow-lg">
+      <div class="max-w-5xl mx-auto flex justify-around py-2 text-[11px] font-bold text-slate-500">
+        <button onclick="switchMainTab('live')" id="nav-tab-live" class="main-nav text-theme flex flex-col items-center gap-1">
+          <i class="fa-solid fa-tower-broadcast text-base"></i><span>Live Class</span>
+        </button>
+        <button onclick="switchMainTab('batches')" id="nav-tab-batches" class="main-nav flex flex-col items-center gap-1">
+          <i class="fa-solid fa-layer-group text-base"></i><span>Batches</span>
+        </button>
+        <button onclick="switchMainTab('tests')" id="nav-tab-tests" class="main-nav flex flex-col items-center gap-1">
+          <i class="fa-solid fa-clipboard-question text-base"></i><span>CBT Test</span>
+        </button>
+        <button onclick="switchMainTab('admin')" id="nav-tab-admin" class="main-nav hidden flex flex-col items-center gap-1">
+          <i class="fa-solid fa-user-shield text-base"></i><span>Admin Panel</span>
+        </button>
+        <button onclick="switchMainTab('founder')" id="nav-tab-founder" class="main-nav hidden flex flex-col items-center gap-1">
+          <i class="fa-solid fa-crown text-base"></i><span>Main Admin</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+<!-- ================= MASTER JAVASCRIPT ENGINE ================= -->
+  <script>
+    // Initialize Database in LocalStorage (Updated Key for Fresh Main Admin IDs)
+    let db = JSON.parse(localStorage.getItem('educore_lms_v2')) || {
+      appName: "Sankalp Academy",
+      appLogo: "https://cdn-icons-png.flaticon.com/512/3413/3413535.png",
+      theme: { p: '#2563eb', l: '#eff6ff', d: '#1d4ed8' },
+      founders: [
+        { user: 'SURAJKUMAROM09', pass: 'SurajOM0903', name: 'Suraj Kumar (Founder)' },
+        { user: 'PriNCE303', pass: 'D@rk_23#99', name: 'Prince (Co-Founder)' }
+      ],
+      admins: [
+        { user: 'admin', pass: 'admin123', name: 'Senior Faculty' }
+      ],
+      students: [
+        { id: 1, name: 'Aarav Sharma', gender: 'Male', email: 'aarav@mail.com', phone: '9876543210', user: 'aarav', pass: '1234', active: true }
+      ],
+      batches: [
+        { id: 101, name: 'Target 2027 Foundation Batch', price: '₹1,499', desc: 'Complete Physics, Chemistry & Maths/Bio • Live + Notes' },
+        { id: 102, name: 'Free Crash Course & PYQ Series', price: 'FREE', desc: 'Open for all registered students' }
+      ],
+      videos: [
+        { id: 201, title: 'Lecture 01: Complete Exam Strategy & Roadmap', vidId: 'M7lc1UVf-VE' }
+      ],
+      liveClass: { title: 'Physics: Electrostats & Gauss Law (Live)', status: 'LIVE' },
+      upcomingClasses: [
+        { title: 'Organic Chemistry: GOC Marathon', time: 'Today, 7:00 PM' },
+        { title: 'Biology: Human Physiology One-Shot', time: 'Tomorrow, 5:30 PM' }
+      ],
+      qTimerSeconds: 30,
+      questions: [
+        { q: 'SI unit of Force kya hoti hai?', opts: ['Joule', 'Newton', 'Watt', 'Pascal'], ans: 1 },
+        { q: 'Water ka chemical formula kya hai?', opts: ['CO2', 'H2O', 'O2', 'NaCl'], ans: 1 },
+        { q: 'Human heart mein kitne chambers hote hain?', opts: ['2', '3', '4', '5'], ans: 2 }
+      ]
+    };
+
+    let currentUser = null;
+    let currentRole = null;
+    let generatedOTP = null;
+    let localStream = null;
+    let micEnabled = true;
+    let camEnabled = false;
+
+    // CBT Test State
+    let cbtIdx = 0;
+    let cbtAnswers = [];
+    let cbtInterval = null;
+    let cbtTimeLeft = 30;
+
+    function syncDB() {
+      localStorage.setItem('educore_lms_v2', JSON.stringify(db));
+      applyBrandingUI();
+    }
+
+    function applyBrandingUI() {
+      document.documentElement.style.setProperty('--primary', db.theme.p);
+      document.documentElement.style.setProperty('--primary-light', db.theme.l);
+      document.documentElement.style.setProperty('--primary-dark', db.theme.d);
+      document.getElementById('auth-app-name').textContent = db.appName;
+      document.getElementById('auth-logo').src = db.appLogo;
+      document.getElementById('header-app-name').textContent = db.appName;
+      document.getElementById('header-logo').src = db.appLogo;
+      document.getElementById('fnd-app-name').value = db.appName;
+      document.getElementById('fnd-app-logo').value = db.appLogo;
+    }
+
+    // Global Unique Username Checker (Checks Students, Admins & Main Admins together)
+    function isUsernameTaken(username) {
+      const cleanUser = username.trim().toLowerCase();
+      const inStudents = db.students.some(s => s.user.toLowerCase() === cleanUser);
+      const inAdmins = db.admins.some(a => a.user.toLowerCase() === cleanUser);
+      const inFounders = db.founders.some(f => f.user.toLowerCase() === cleanUser);
+      return inStudents || inAdmins || inFounders;
+    }
+
+    // ================= AUTHENTICATION LOGIC =================
+    function switchAuthRole(role) {
+      ['student', 'admin', 'founder'].forEach(r => {
+        document.getElementById('panel-' + r).classList.add('hidden');
+        const tab = document.getElementById('role-tab-' + r);
+        tab.className = 'py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition';
+      });
+      document.getElementById('panel-' + role).classList.remove('hidden');
+      document.getElementById('role-tab-' + role).className = 'py-2.5 rounded-xl bg-theme text-white shadow transition';
+    }
+
+    function toggleStudentForm(mode) {
+      const isLogin = mode === 'login';
+      document.getElementById('student-login-box').classList.toggle('hidden', !isLogin);
+      document.getElementById('student-signup-box').classList.toggle('hidden', isLogin);
+      document.getElementById('stu-mode-login').className = isLogin ? 'text-theme border-b-2 border-theme pb-1' : 'text-slate-400 pb-1';
+      document.getElementById('stu-mode-signup').className = !isLogin ? 'text-theme border-b-2 border-theme pb-1' : 'text-slate-400 pb-1';
+    }
+
+    function sendMockOTP() {
+      generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
+      alert(`📲 Your Verification OTP is: ${generatedOTP}`);
+    }
+
+    function registerStudent() {
+      const name = document.getElementById('reg-name').value.trim();
+      const gender = document.getElementById('reg-gender').value;
+      const email = document.getElementById('reg-email').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const user = document.getElementById('reg-user').value.trim();
+      const pass = document.getElementById('reg-pass').value.trim();
+      const otp = document.getElementById('reg-otp-input').value.trim();
+
+      if (!name || !gender || !user || !pass) return alert('Name, Gender, Username aur Password mandatory hain!');
+      if (!generatedOTP || otp !== generatedOTP) return alert('Invalid OTP! Pehle Get OTP par click karke sahi OTP dalein.');
+      if (isUsernameTaken(user)) return alert('❌ Yeh Username pehle se use ho raha hai (Student/Admin/Founder mein)! Kuch alag username rakhein.');
+
+      const newStu = { id: Date.now(), name, gender, email, phone, user, pass, active: true };
+      db.students.push(newStu);
+      syncDB();
+      alert('✅ Registration Successful! Ab apne Username aur Password se login karein.');
+      toggleStudentForm('login');
+    }
+
+    function loginStudent() {
+      const u = document.getElementById('stu-login-user').value.trim();
+      const p = document.getElementById('stu-login-pass').value.trim();
+      const stu = db.students.find(s => s.user === u && s.pass === p);
+      if (!stu) return alert('Invalid Student Username or Password!');
+      if (!stu.active) return alert('🚫 Aapka subscription Admin dwara Deactivate kar diya gaya hai.');
+      enterDashboard(stu, 'student');
+    }
+
+    function loginAdmin() {
+      const u = document.getElementById('adm-user').value.trim();
+      const p = document.getElementById('adm-pass').value.trim();
+      const adm = db.admins.find(a => a.user === u && a.pass === p);
+      if (!adm) return alert('Invalid Admin Credentials!');
+      enterDashboard(adm, 'admin');
+    }
+
+    function loginFounder() {
+      const u = document.getElementById('fnd-user').value.trim();
+      const p = document.getElementById('fnd-pass').value.trim();
+      const fnd = db.founders.find(f => f.user === u && f.pass === p);
+      if (!fnd) return alert('Invalid Main Admin Credentials!');
+      enterDashboard(fnd, 'founder');
+    }
+
+    function enterDashboard(userObj, role) {
+      currentUser = userObj;
+      currentRole = role;
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      document.getElementById('header-user-greeting').textContent = `Hi, ${userObj.name || userObj.user}`;
+
+      const badge = document.getElementById('header-role-badge');
+      document.getElementById('nav-tab-admin').classList.add('hidden');
+      document.getElementById('nav-tab-founder').classList.add('hidden');
+      document.getElementById('admin-live-call-bar').classList.add('hidden');
+
+      if (role === 'student') {
+        badge.textContent = 'Student Portal';
+        switchMainTab('live');
+      } else if (role === 'admin') {
+        badge.textContent = 'Admin / Teacher Panel';
+        document.getElementById('nav-tab-admin').classList.remove('hidden');
+        document.getElementById('admin-live-call-bar').classList.remove('hidden');
+        switchMainTab('admin');
+      } else if (role === 'founder') {
+        badge.textContent = 'Main Admin (Founder)';
+        document.getElementById('nav-tab-admin').classList.remove('hidden');
+        document.getElementById('nav-tab-founder').classList.remove('hidden');
+        document.getElementById('admin-live-call-bar').classList.remove('hidden');
+        switchMainTab('founder');
+      }
+      renderDashboardData();
+    }
+
+    function logoutApp() {
+      endStudentCall();
+      currentUser = null;
+      currentRole = null;
+      document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
+    }
+
+    function switchMainTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+      document.getElementById('view-' + tabId).classList.remove('hidden');
+      document.querySelectorAll('.main-nav').forEach(n => n.classList.remove('text-theme'));
+      const activeTab = document.getElementById('nav-tab-' + tabId);
+      if (activeTab) activeTab.classList.add('text-theme');
+      renderDashboardData();
+    }
+
+    // ================= RENDER DASHBOARD CONTENT =================
+    function renderDashboardData() {
+      // Live & Upcoming
+      document.getElementById('live-class-title').textContent = db.liveClass.title;
+      document.getElementById('upcoming-classes-list').innerHTML = db.upcomingClasses.map(c => `
+        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+          <div>
+            <h4 class="text-xs font-extrabold text-slate-800">${c.title}</h4>
+            <span class="text-[11px] text-slate-500"><i class="fa-regular fa-clock mr-1"></i>${c.time}</span>
+          </div>
+          <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">Upcoming</span>
+        </div>
+      `).join('');
+
+      // Live Call Student Dropdown
+      const activeStudents = db.students.filter(s => s.active);
+      document.getElementById('live-call-student-select').innerHTML = activeStudents.length
+        ? activeStudents.map(s => `<option value="${s.name}">${s.name} (@${s.user})</option>`).join('')
+        : `<option value="">No Active Students</option>`;
+
+      // Batches & Videos
+      document.getElementById('batches-grid').innerHTML = db.batches.map(b => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-[10px] font-extrabold bg-theme-light text-theme px-2.5 py-0.5 rounded-full">Active Batch</span>
+            <span class="text-xs font-black text-emerald-600">${b.price}</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-slate-900">${b.name}</h3>
+          <p class="text-xs text-slate-500 mt-1">${b.desc}</p>
+        </div>
+      `).join('');
+
+      document.getElementById('videos-list').innerHTML = db.videos.map(v => `
+        <div onclick="playRecordedVideo('${v.vidId}', '${v.title}')" class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:border-theme">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center"><i class="fa-solid fa-play"></i></div>
+            <span class="text-xs font-bold text-slate-800">${v.title}</span>
+          </div>
+          <span class="text-[11px] font-bold text-theme">Watch Now</span>
+        </div>
+      `).join('');
+
+      // CBT Info
+      document.getElementById('cbt-meta-info').textContent = `Questions: ${db.questions.length} • Time per Question: ${db.qTimerSeconds}s • +4 / -1 Marking`;
+      document.getElementById('adm-q-seconds').value = db.qTimerSeconds;
+
+      // Admin Student List
+      document.getElementById('admin-total-students').textContent = `${db.students.length} Students`;
+      document.getElementById('admin-students-list').innerHTML = db.students.map(s => `
+        <div class="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+          <div>
+            <span class="font-extrabold text-slate-900">${s.name}</span> <span class="text-slate-500">(@${s.user} • ${s.gender})</span>
+            <div class="text-[10px] text-slate-500">${s.email || 'No Email'} | ${s.phone || 'No Phone'}</div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="toggleStudentSub(${s.id})" class="px-2.5 py-1 rounded-lg font-bold text-[11px] ${s.active ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">
+              ${s.active ? 'Deactivate' : 'Activate'}
+            </button>
+            <button onclick="removeStudent(${s.id})" class="px-2.5 py-1 rounded-lg bg-rose-100 text-rose-700 font-bold text-[11px]">Remove</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Main Admins (Founder / Co-Founder) List
+      document.getElementById('founder-main-admins-list').innerHTML = db.founders.map((f, idx) => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-purple-50 border border-purple-200 text-xs">
+          <span><b>${f.name}</b> (Username: <code>${f.user}</code>)</span>
+          <button onclick="founderRemoveMainAdmin(${idx})" class="text-rose-600 font-bold text-[11px] hover:underline">Remove</button>
+        </div>
+      `).join('');
+
+      // Founder Admin Staff List
+      document.getElementById('founder-admins-list').innerHTML = db.admins.map((a, idx) => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+          <span><b>${a.name}</b> (Username: <code>${a.user}</code>)</span>
+          <button onclick="founderRemoveAdmin(${idx})" class="text-rose-600 font-bold text-[11px] hover:underline">Remove Admin</button>
+        </div>
+      `).join('');
+    }
+
+    function playRecordedVideo(vidId, title) {
+      switchMainTab('live');
+      document.getElementById('live-class-title').textContent = title;
+      document.getElementById('live-stream-frame').src = `https://www.youtube.com/embed/${vidId}?autoplay=1`;
+    }
+
+    // ================= LIVE CLASS CALL & CAMERA/MIC CONTROLS =================
+    function triggerStudentCall() {
+      const stuName = document.getElementById('live-call-student-select').value;
+      if (!stuName) return alert('Koi active student select karein!');
+      alert(`📞 Calling ${stuName}... (Previewing incoming call screen for student)`);
+      document.getElementById('incoming-call-modal').classList.remove('hidden');
+    }
+
+    function declineLiveCall() {
+      document.getElementById('incoming-call-modal').classList.add('hidden');
+    }
+
+    async function acceptLiveCall() {
+      document.getElementById('incoming-call-modal').classList.add('hidden');
+      document.getElementById('student-av-dock').classList.remove('hidden');
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const vidEl = document.getElementById('local-webcam');
+        vidEl.srcObject = localStream;
+        vidEl.classList.remove('hidden');
+        document.getElementById('cam-off-placeholder').classList.add('hidden');
+        camEnabled = true;
+        document.getElementById('btn-stu-cam').innerHTML = '<i class="fa-solid fa-video"></i>';
+        document.getElementById('btn-stu-cam').className = 'w-8 h-8 rounded-full bg-emerald-500 text-slate-950 text-xs font-bold';
+      } catch (err) {
+        alert('Mic & Stage Connected! (Browser camera permission denied or unavailable, Mic UI active)');
+      }
+    }
+
+    function toggleStudentMic() {
+      micEnabled = !micEnabled;
+      if (localStream) localStream.getAudioTracks().forEach(t => t.enabled = micEnabled);
+      const btn = document.getElementById('btn-stu-mic');
+      btn.innerHTML = micEnabled ? '<i class="fa-solid fa-microphone"></i>' : '<i class="fa-solid fa-microphone-slash"></i>';
+      btn.className = micEnabled ? 'w-8 h-8 rounded-full bg-emerald-500 text-slate-950 text-xs font-bold' : 'w-8 h-8 rounded-full bg-rose-600 text-white text-xs font-bold';
+    }
+
+    function toggleStudentCam() {
+      camEnabled = !camEnabled;
+      if (localStream) localStream.getVideoTracks().forEach(t => t.enabled = camEnabled);
+      const btn = document.getElementById('btn-stu-cam');
+      btn.innerHTML = camEnabled ? '<i class="fa-solid fa-video"></i>' : '<i class="fa-solid fa-video-slash"></i>';
+      btn.className = camEnabled ? 'w-8 h-8 rounded-full bg-emerald-500 text-slate-950 text-xs font-bold' : 'w-8 h-8 rounded-full bg-slate-700 text-white text-xs font-bold';
+      document.getElementById('local-webcam').classList.toggle('hidden', !camEnabled);
+      document.getElementById('cam-off-placeholder').classList.toggle('hidden', camEnabled);
+    }
+
+    function endStudentCall() {
+      if (localStream) {
+        localStream.getTracks().forEach(t => t.stop());
+        localStream = null;
+      }
+      document.getElementById('student-av-dock').classList.add('hidden');
+    }
+
+    // ================= CBT PER-QUESTION TIMER TEST =================
+    function startCustomTest() {
+      if (!db.questions.length) return alert('Test mein koi question nahi hai!');
+      cbtIdx = 0;
+      cbtAnswers = new Array(db.questions.length).fill(null);
+      document.getElementById('cbt-lobby').classList.add('hidden');
+      document.getElementById('cbt-result-box').classList.add('hidden');
+      document.getElementById('cbt-exam-box').classList.remove('hidden');
+      loadCBTQuestion();
+    }
+
+    function loadCBTQuestion() {
+      clearInterval(cbtInterval);
+      cbtTimeLeft = db.qTimerSeconds;
+      const qObj = db.questions[cbtIdx];
+      document.getElementById('cbt-q-progress').textContent = `Question ${cbtIdx + 1} / ${db.questions.length}`;
+      document.getElementById('cbt-q-text').textContent = qObj.q;
+      document.getElementById('cbt-q-timer').textContent = `${cbtTimeLeft}s`;
+
+      document.getElementById('cbt-options-box').innerHTML = qObj.opts.map((opt, i) => `
+        <div onclick="pickCBTOption(${i})" class="p-3.5 rounded-xl border text-xs font-bold cursor-pointer ${cbtAnswers[cbtIdx] === i ? 'bg-theme-light border-theme text-theme' : 'bg-slate-50 border-slate-200'}">
+          ${String.fromCharCode(65 + i)}. ${opt}
+        </div>
+      `).join('');
+
+      cbtInterval = setInterval(() => {
+        cbtTimeLeft--;
+        document.getElementById('cbt-q-timer').textContent = `${cbtTimeLeft}s`;
+        if (cbtTimeLeft <= 0) nextCBTQuestion();
+      }, 1000);
+    }
+
+    function pickCBTOption(i) {
+      cbtAnswers[cbtIdx] = i;
+      loadCBTQuestion();
+    }
+
+    function nextCBTQuestion() {
+      clearInterval(cbtInterval);
+      if (cbtIdx < db.questions.length - 1) {
+        cbtIdx++;
+        loadCBTQuestion();
+      } else {
+        finishCBTTest();
+      }
+    }
+
+    function finishCBTTest() {
+      clearInterval(cbtInterval);
+      let correct = 0, wrong = 0;
+      db.questions.forEach((q, i) => {
+        if (cbtAnswers[i] !== null) {
+          if (cbtAnswers[i] === q.ans) correct++;
+          else wrong++;
+        }
+      });
+      const score = (correct * 4) - wrong;
+      document.getElementById('cbt-final-score').textContent = `${score} / ${db.questions.length * 4}`;
+      document.getElementById('cbt-final-stats').textContent = `Correct: ${correct} | Wrong: ${wrong}`;
+      document.getElementById('cbt-exam-box').classList.add('hidden');
+      document.getElementById('cbt-result-box').classList.remove('hidden');
+    }
+
+    function resetCBT() {
+      document.getElementById('cbt-result-box').classList.add('hidden');
+      document.getElementById('cbt-lobby').classList.remove('hidden');
+    }
+// ================= ADMIN & MAIN ADMIN ACTIONS =================
+    function adminUploadVideo() {
+      const title = document.getElementById('adm-vid-title').value.trim();
+      let url = document.getElementById('adm-vid-url').value.trim();
+      if (!title || !url) return alert('Title aur Video URL dalein!');
+      if (url.includes('v=')) url = url.split('v=')[1].split('&')[0];
+      else if (url.includes('youtu.be/')) url = url.split('youtu.be/')[1].split('?')[0];
+      db.videos.unshift({ id: Date.now(), title, vidId: url });
+      document.getElementById('adm-vid-title').value = '';
+      document.getElementById('adm-vid-url').value = '';
+      syncDB();
+      renderDashboardData();
+      alert('✅ Video Uploaded!');
+    }
+
+    function adminManageLive() {
+      const title = document.getElementById('adm-live-title').value.trim();
+      const status = document.getElementById('adm-live-status').value;
+      const time = document.getElementById('adm-live-time').value.trim() || 'Upcoming';
+      if (!title) return alert('Class topic likhein!');
+      if (status === 'LIVE') db.liveClass = { title, status: 'LIVE' };
+      else db.upcomingClasses.unshift({ title, time });
+      document.getElementById('adm-live-title').value = '';
+      syncDB();
+      renderDashboardData();
+      alert('✅ Live Schedule Updated!');
+    }
+
+    function saveQuestionTimer() {
+      const sec = parseInt(document.getElementById('adm-q-seconds').value);
+      if (sec >= 5) {
+        db.qTimerSeconds = sec;
+        syncDB();
+        renderDashboardData();
+        alert(`✅ Per-Question Timer set to ${sec} seconds!`);
+      }
+    }
+
+    function adminAddQuestion() {
+      const q = document.getElementById('adm-q-text').value.trim();
+      const opts = [0, 1, 2, 3].map(i => document.getElementById('adm-opt-' + i).value.trim());
+      const ans = parseInt(document.getElementById('adm-q-ans').value);
+      if (!q || opts.some(o => !o)) return alert('Question aur chaaro options bharein!');
+      db.questions.push({ q, opts, ans });
+      document.getElementById('adm-q-text').value = '';
+      [0, 1, 2, 3].forEach(i => document.getElementById('adm-opt-' + i).value = '');
+      syncDB();
+      renderDashboardData();
+      alert('✅ Question Added to CBT Test!');
+    }
+
+    function toggleStudentSub(id) {
+      const s = db.students.find(x => x.id === id);
+      if (s) s.active = !s.active;
+      syncDB();
+      renderDashboardData();
+    }
+
+    function removeStudent(id) {
+      db.students = db.students.filter(x => x.id !== id);
+      syncDB();
+      renderDashboardData();
+    }
+
+    // Main Admin (Founder / Co-Founder) Functions
+    function applyTheme(p, l, d) {
+      db.theme = { p, l, d };
+      syncDB();
+    }
+
+    function founderSaveBranding() {
+      db.appName = document.getElementById('fnd-app-name').value.trim() || "Sankalp Academy";
+      db.appLogo = document.getElementById('fnd-app-logo').value.trim() || db.appLogo;
+      syncDB();
+      alert('✅ App Branding & Logo Updated!');
+    }
+
+    function founderLaunchBatch() {
+      const name = document.getElementById('fnd-batch-name').value.trim();
+      const price = document.getElementById('fnd-batch-price').value.trim() || 'FREE';
+      const desc = document.getElementById('fnd-batch-desc').value.trim() || 'Complete Syllabus';
+      if (!name) return alert('Batch ka naam likhein!');
+      db.batches.unshift({ id: Date.now(), name, price, desc });
+      document.getElementById('fnd-batch-name').value = '';
+      document.getElementById('fnd-batch-price').value = '';
+      document.getElementById('fnd-batch-desc').value = '';
+      syncDB();
+      renderDashboardData();
+      alert('🚀 New Batch Launched!');
+    }
+
+    function founderAddMainAdmin() {
+      const name = document.getElementById('fnd-new-fnd-name').value.trim() || 'Co-Founder';
+      const user = document.getElementById('fnd-new-fnd-user').value.trim();
+      const pass = document.getElementById('fnd-new-fnd-pass').value.trim();
+      if (!user || !pass) return alert('Main Admin username aur password dalein!');
+      if (isUsernameTaken(user)) return alert('❌ Yeh Username pehle se kisi Student/Admin/Founder ke paas hai! Kuch change karke dalein.');
+      
+      db.founders.push({ user, pass, name });
+      document.getElementById('fnd-new-fnd-name').value = '';
+      document.getElementById('fnd-new-fnd-user').value = '';
+      document.getElementById('fnd-new-fnd-pass').value = '';
+      syncDB();
+      renderDashboardData();
+      alert('✅ New Main Admin (Co-Founder) Added!');
+    }
+
+    function founderRemoveMainAdmin(idx) {
+      if (db.founders.length <= 1) return alert('Kam se kam 1 Main Admin (Founder) hona zaroori hai!');
+      db.founders.splice(idx, 1);
+      syncDB();
+      renderDashboardData();
+    }
+
+    function founderAddAdmin() {
+      const user = document.getElementById('fnd-new-adm-user').value.trim();
+      const pass = document.getElementById('fnd-new-adm-pass').value.trim();
+      if (!user || !pass) return alert('Admin username aur password dalein!');
+      if (isUsernameTaken(user)) return alert('❌ Yeh Username pehle se taken hai! Kuch alag username dalein.');
+      
+      db.admins.push({ user, pass, name: 'Admin Staff' });
+      document.getElementById('fnd-new-adm-user').value = '';
+      document.getElementById('fnd-new-adm-pass').value = '';
+      syncDB();
+      renderDashboardData();
+      alert('✅ New Admin Added!');
+    }
+
+    function founderRemoveAdmin(idx) {
+      if (db.admins.length <= 1) return alert('Kam se kam 1 Admin hona zaroori hai!');
+      db.admins.splice(idx, 1);
+      syncDB();
+      renderDashboardData();
+    }
+
+    // Boot Branding
+    applyBrandingUI();
+  </script>
+</body>
+</html>
